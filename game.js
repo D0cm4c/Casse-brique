@@ -178,8 +178,10 @@ function update() {
         ball.dy = -ball.dy;
     }
     
-    // Collision avec la raquette
+    // Collision avec la raquette (seulement quand la balle descend,
+    // sinon le rebond se rejoue à chaque image tant que la balle traverse la raquette)
     if (
+        ball.dy > 0 &&
         ball.y + ball.radius > paddle.y &&
         ball.y - ball.radius < paddle.y + paddle.height &&
         ball.x > paddle.x &&
@@ -189,6 +191,8 @@ function update() {
         const hitPosition = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
         ball.dx = hitPosition * ball.speed;
         ball.dy = -Math.sqrt(ball.speed * ball.speed - ball.dx * ball.dx);
+        // Replacer la balle au-dessus de la raquette pour éviter qu'elle reste coincée
+        ball.y = paddle.y - ball.radius;
     }
     
     // Collision avec les briques
@@ -266,8 +270,12 @@ function areAllBricksBroken() {
 // Lancer la balle
 function launchBall() {
     if (!ball.launched && !gameState.gameOver && !gameState.gameWon) {
-        ball.dx = config.ballSpeed * (Math.random() * 2 - 1); // Direction aléatoire
-        ball.dy = -config.ballSpeed;
+        // Angle aléatoire entre 30° et 60° de chaque côté de la verticale :
+        // ni quasi vertical (ennuyeux), ni quasi horizontal (balle qui n'avance plus)
+        const angle = (Math.PI / 6) + Math.random() * (Math.PI / 6);
+        const direction = Math.random() < 0.5 ? -1 : 1;
+        ball.dx = direction * config.ballSpeed * Math.sin(angle);
+        ball.dy = -config.ballSpeed * Math.cos(angle);
         ball.launched = true;
         gameState.gameRunning = true;
     }
@@ -305,6 +313,7 @@ function keyDownHandler(e) {
         paddle.movingLeft = true;
     }
     if (e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault(); // sinon la page défile
         launchBall();
     }
     if ((e.key === 'r' || e.key === 'R') && (gameState.gameOver || gameState.gameWon)) {
