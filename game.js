@@ -88,13 +88,87 @@ function drawPaddle() {
     ctx.closePath();
 }
 
-// Dessiner la balle
+// Dessiner la balle-chat
 function drawBall() {
+    const r = ball.radius;
+    const angle = Math.atan2(ball.dy, ball.dx);
+
+    ctx.save();
+    ctx.translate(ball.x, ball.y);
+    ctx.rotate(angle + Math.PI / 2);
+
+    // Oreilles
     ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.moveTo(-r * 0.9, -r * 0.4);
+    ctx.lineTo(-r * 0.55, -r * 1.4);
+    ctx.lineTo(-r * 0.1, -r * 0.7);
+    ctx.closePath();
+    ctx.moveTo(r * 0.9, -r * 0.4);
+    ctx.lineTo(r * 0.55, -r * 1.4);
+    ctx.lineTo(r * 0.1, -r * 0.7);
+    ctx.closePath();
+    ctx.fillStyle = '#F2A65A';
+    ctx.fill();
+
+    // Intérieur des oreilles
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.7, -r * 0.5);
+    ctx.lineTo(-r * 0.55, -r * 1.1);
+    ctx.lineTo(-r * 0.25, -r * 0.65);
+    ctx.closePath();
+    ctx.moveTo(r * 0.7, -r * 0.5);
+    ctx.lineTo(r * 0.55, -r * 1.1);
+    ctx.lineTo(r * 0.25, -r * 0.65);
+    ctx.closePath();
+    ctx.fillStyle = '#E8788A';
+    ctx.fill();
+
+    // Tête
+    ctx.beginPath();
+    ctx.arc(0, 0, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#F2A65A';
+    ctx.fill();
+
+    // Yeux
+    ctx.beginPath();
+    ctx.arc(-r * 0.4, -r * 0.1, r * 0.18, 0, Math.PI * 2);
+    ctx.arc(r * 0.4, -r * 0.1, r * 0.18, 0, Math.PI * 2);
     ctx.fillStyle = '#FFFFFF';
     ctx.fill();
+    ctx.beginPath();
+    ctx.arc(-r * 0.4, -r * 0.05, r * 0.09, 0, Math.PI * 2);
+    ctx.arc(r * 0.4, -r * 0.05, r * 0.09, 0, Math.PI * 2);
+    ctx.fillStyle = '#222222';
+    ctx.fill();
+
+    // Nez et bouche
+    ctx.beginPath();
+    ctx.moveTo(0, r * 0.15);
+    ctx.lineTo(-r * 0.1, r * 0.3);
+    ctx.lineTo(r * 0.1, r * 0.3);
     ctx.closePath();
+    ctx.fillStyle = '#E8788A';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.15, r * 0.4);
+    ctx.quadraticCurveTo(0, r * 0.55, r * 0.15, r * 0.4);
+    ctx.strokeStyle = '#222222';
+    ctx.lineWidth = Math.max(1, r * 0.08);
+    ctx.stroke();
+
+    // Moustaches
+    ctx.beginPath();
+    ctx.moveTo(-r * 0.2, r * 0.3);
+    ctx.lineTo(-r * 1.0, r * 0.15);
+    ctx.moveTo(-r * 0.2, r * 0.4);
+    ctx.lineTo(-r * 1.0, r * 0.4);
+    ctx.moveTo(r * 0.2, r * 0.3);
+    ctx.lineTo(r * 1.0, r * 0.15);
+    ctx.moveTo(r * 0.2, r * 0.4);
+    ctx.lineTo(r * 1.0, r * 0.4);
+    ctx.stroke();
+
+    ctx.restore();
 }
 
 // Dessiner les briques
